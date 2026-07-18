@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title description">
+  <title id="title">Jantar romântico</title>
+  <desc id="description">Mesa elegante com velas e flores em tons românticos</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ead9cc"/><stop offset="1" stop-color="#b8c2ae"/></linearGradient><radialGradient id="glow"><stop stop-color="#fff7db" stop-opacity=".9"/><stop offset="1" stop-color="#fff7db" stop-opacity="0"/></radialGradient></defs>
+  <rect width="1200" height="900" fill="url(#bg)"/><circle cx="290" cy="210" r="220" fill="url(#glow)"/><circle cx="930" cy="210" r="180" fill="url(#glow)"/>
+  <path d="M130 690h940v210H130z" fill="#725a4e" opacity=".82"/><ellipse cx="600" cy="690" rx="455" ry="95" fill="#f6eee7"/>
+  <g fill="none" stroke="#fffaf2" stroke-width="20"><path d="M350 625c-24-100 30-177 88-177s112 77 88 177"/><path d="M674 625c-24-100 30-177 88-177s112 77 88 177"/></g>
+  <g fill="#9f6d65"><circle cx="556" cy="575" r="44"/><circle cx="612" cy="548" r="52"/><circle cx="665" cy="582" r="42"/></g><g fill="#596653"><path d="M600 650c-18-110-5-177 12-240 18 76 23 150 9 240z"/><path d="M594 500c-80-48-111-82-137-133 73 17 117 52 149 105z"/><path d="M627 510c78-55 109-94 130-148-72 23-114 61-143 117z"/></g>
+  <g fill="#fff3d1"><rect x="230" y="395" width="18" height="242" rx="9"/><ellipse cx="239" cy="380" rx="30" ry="48"/><rect x="950" y="395" width="18" height="242" rx="9"/><ellipse cx="959" cy="380" rx="30" ry="48"/></g>
+</svg>

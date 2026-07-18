@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title description">
+  <title id="title">Passeio na lua de mel</title>
+  <desc id="description">Paisagem de viagem com sol, montanhas e malas</desc>
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#e7d3c5"/><stop offset="1" stop-color="#f8f2ea"/></linearGradient></defs>
+  <rect width="1200" height="900" fill="url(#sky)"/><circle cx="930" cy="190" r="105" fill="#f4dfab"/>
+  <path d="M0 600 290 300l250 300L760 360l440 310v230H0z" fill="#9faf94"/><path d="m160 600 270-230 215 230 190-150 365 250v200H0V720z" fill="#6f8065" opacity=".9"/><path d="M0 745c250-80 410-60 610 20 210 85 380 28 590-22v157H0z" fill="#d7b9a3"/>
+  <g transform="translate(420 525)"><rect x="0" y="80" width="250" height="230" rx="35" fill="#9f6d65"/><path d="M76 82V35c0-50 98-50 98 0v47" fill="none" stroke="#725a4e" stroke-width="22"/><rect x="36" y="130" width="178" height="20" rx="10" fill="#c89488"/><circle cx="52" cy="322" r="18" fill="#44362f"/><circle cx="198" cy="322" r="18" fill="#44362f"/></g>
+  <g fill="#fff" opacity=".75"><ellipse cx="235" cy="180" rx="120" ry="38"/><ellipse cx="305" cy="150" rx="75" ry="42"/><ellipse cx="560" cy="235" rx="115" ry="34"/></g>
+</svg>
