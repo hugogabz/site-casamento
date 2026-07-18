@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Toaster } from "sonner";
 
 import { GiftGrid } from "@/components/gifts/gift-grid";
-import { gifts } from "@/data/gifts";
+import { getPublicGifts } from "@/services/gifts";
 
 export const metadata: Metadata = {
   title: "Lista de presentes | Nosso Casamento",
@@ -12,7 +12,9 @@ export const metadata: Metadata = {
     "Escolha um presente e faça parte deste novo capítulo da nossa história.",
 };
 
-export default function GiftsPage() {
+export default async function GiftsPage() {
+  const gifts = await getPublicGifts();
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#f8f2ea] px-5 py-8 text-[#44362f] sm:px-8 lg:px-12">
       <div className="pointer-events-none absolute -left-32 top-16 h-80 w-80 rounded-full bg-[#d7b9a3]/25 blur-3xl" />

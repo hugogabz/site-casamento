@@ -3,9 +3,8 @@
 import { motion } from "framer-motion";
 import { Gift as GiftIcon, Sparkles } from "lucide-react";
 import Image from "next/image";
-import { toast } from "sonner";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
 import { getAvailableQuantity, type Gift } from "@/types/gift";
 
 type GiftCardProps = {
@@ -22,13 +21,6 @@ export function GiftCard({ gift, index }: GiftCardProps) {
   const availableQuantity = getAvailableQuantity(gift);
   const isSoldOut = gift.status === "SOLD_OUT";
   const progress = Math.min((gift.giftedQuantity / gift.quantity) * 100, 100);
-
-  function handleGiftSelection() {
-    toast.info("Pagamento em preparação", {
-      description:
-        "A escolha do presente já funciona. O pagamento será conectado na próxima etapa.",
-    });
-  }
 
   return (
     <motion.article
@@ -86,15 +78,18 @@ export function GiftCard({ gift, index }: GiftCardProps) {
               {currencyFormatter.format(gift.priceInCents / 100)}
             </p>
           </div>
-          <Button
-            size="lg"
-            onClick={handleGiftSelection}
-            disabled={isSoldOut}
-            className="h-11 rounded-full bg-[#596653] px-5 text-white hover:bg-[#46513f]"
-          >
-            <GiftIcon className="size-4" />
-            {isSoldOut ? "Esgotado" : "Presentear"}
-          </Button>
+          {isSoldOut ? (
+            <span className="inline-flex h-11 items-center gap-2 rounded-full bg-[#596653]/50 px-5 text-sm font-medium text-white">
+              <GiftIcon className="size-4" /> Esgotado
+            </span>
+          ) : (
+            <Link
+              href={`/presentes/${gift.id}`}
+              className="inline-flex h-11 items-center gap-2 rounded-full bg-[#596653] px-5 text-sm font-medium text-white transition hover:bg-[#46513f]"
+            >
+              <GiftIcon className="size-4" /> Presentear
+            </Link>
+          )}
         </div>
       </div>
     </motion.article>
