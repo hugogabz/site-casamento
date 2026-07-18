@@ -45,3 +45,46 @@ model GiftOrder {
   @@index([giftId])
   @@index([status])
 }
+
+model WeddingSettings {
+  id                 String   @id @default("wedding")
+  invitePriceInCents Int      @default(0)
+  totalInvites       Int      @default(0)
+  reservationMinutes Int     @default(15)
+  inviteSalesEnabled Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model InviteReservation {
+  id               String        @id @default(cuid())
+  buyerName        String
+  buyerEmail       String
+  buyerPhone       String?
+  quantity         Int
+  unitPriceInCents Int
+  totalInCents     Int
+  status           String        @default("PENDING")
+  expiresAt        DateTime
+  paymentProvider  String?
+  paymentReference String?       @unique
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  guests            InviteGuest[]
+
+  @@index([status])
+  @@index([expiresAt])
+}
+
+model InviteGuest {
+  id            String            @id @default(cuid())
+  reservationId String
+  name          String
+  isBuyer       Boolean           @default(false)
+  checkedInAt   DateTime?
+  createdAt     DateTime          @default(now())
+  reservation   InviteReservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@index([reservationId])
+  @@index([name])
+}

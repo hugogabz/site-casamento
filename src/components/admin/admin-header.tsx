@@ -1,4 +1,4 @@
-import { ExternalLink, Gift, ListChecks, LogOut } from "lucide-react";
+import { ExternalLink, Gift, ListChecks, LogOut, TicketCheck } from "lucide-react";
 import Link from "next/link";
 
 import { logoutAdmin } from "@/app/admin/actions";
@@ -18,6 +18,13 @@ export function AdminHeader() {
           </span>
         </Link>
         <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+          <Link
+            href="/admin/convites"
+            className="inline-flex h-9 items-center gap-2 rounded-full px-3 text-sm font-medium text-[#665a52] transition hover:bg-white"
+          >
+            <TicketCheck className="size-4" />
+            <span className="hidden md:inline">Convites</span>
+          </Link>
           <Link
             href="/admin/presentes"
             className="inline-flex h-9 items-center gap-2 rounded-full px-3 text-sm font-medium text-[#665a52] transition hover:bg-white"

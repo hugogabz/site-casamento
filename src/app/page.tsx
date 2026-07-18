@@ -3,31 +3,8 @@
 import { motion } from "framer-motion";
 import { CalendarDays, Gift, Heart } from "lucide-react";
 import Link from "next/link";
-import { toast, Toaster } from "sonner";
-import { create } from "zustand";
-
-import { Button } from "@/components/ui/button";
-
-type ConfirmationStore = {
-  confirmed: boolean;
-  confirm: () => void;
-};
-
-const useConfirmation = create<ConfirmationStore>((set) => ({
-  confirmed: false,
-  confirm: () => set({ confirmed: true }),
-}));
 
 export default function Home() {
-  const { confirmed, confirm } = useConfirmation();
-
-  function handleConfirmation() {
-    confirm();
-    toast.success("Presença confirmada!", {
-      description: "Que alegria ter você conosco neste dia.",
-    });
-  }
-
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#f8f2ea] px-6 py-16 text-[#44362f]">
       <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-[#d7b9a3]/30 blur-3xl" />
@@ -57,14 +34,9 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Button
-            size="lg"
-            onClick={handleConfirmation}
-            disabled={confirmed}
-            className="h-11 rounded-full bg-[#596653] px-8 text-white hover:bg-[#46513f]"
-          >
-            {confirmed ? "Presença confirmada" : "Quero participar"}
-          </Button>
+          <Link href="/convites" className="inline-flex h-11 items-center justify-center rounded-full bg-[#596653] px-8 text-sm font-medium text-white transition-colors hover:bg-[#46513f]">
+            Comprar convite
+          </Link>
           <Link
             href="/presentes"
             className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[#9f6d65]/35 bg-white/45 px-7 text-sm font-medium text-[#76564f] transition-colors hover:bg-white/80"
@@ -75,7 +47,6 @@ export default function Home() {
         </div>
       </motion.section>
 
-      <Toaster richColors position="top-center" />
     </main>
   );
 }

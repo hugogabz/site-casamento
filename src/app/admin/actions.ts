@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { destroyAdminSession, requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
+import { uploadGiftImage } from "@/lib/cloudinary";
 
 export type GiftFormState = {
   error?: string;
@@ -24,7 +25,7 @@ function getNonNegativeInteger(formData: FormData, name: string) {
   return value;
 }
 
-function parseGiftForm(formData: FormData) {
+async function parseGiftForm(formData: FormData) {
   const price = Number(String(formData.get("price") ?? "").replace(",", "."));
   if (!Number.isFinite(price) || price <= 0) {
     throw new Error("Informe um valor maior que zero.");
@@ -38,7 +39,10 @@ function parseGiftForm(formData: FormData) {
     throw new Error("A quantidade presenteada não pode superar o total.");
   }
 
-  const imageUrl = getRequiredText(formData, "imageUrl");
+  const imageFile = formData.get("imageFile");
+  const imageUrl = imageFile instanceof File && imageFile.size > 0
+    ? await uploadGiftImage(imageFile)
+    : getRequiredText(formData, "imageUrl");
   if (!imageUrl.startsWith("/") && !imageUrl.startsWith("https://")) {
     throw new Error("Use uma imagem local iniciada por / ou uma URL https://.");
   }
@@ -60,7 +64,7 @@ export async function createGift(
 ): Promise<GiftFormState> {
   await requireAdmin();
   try {
-    await prisma.gift.create({ data: parseGiftForm(formData) });
+    await prisma.gift.create({ data: await parseGiftForm(formData) });
   } catch (error) {
     return { error: error instanceof Error ? error.message : "Não foi possível criar o presente." };
   }
@@ -76,7 +80,7 @@ export async function updateGift(
 ): Promise<GiftFormState> {
   await requireAdmin();
   try {
-    await prisma.gift.update({ where: { id }, data: parseGiftForm(formData) });
+    await prisma.gift.update({ where: { id }, data: await parseGiftForm(formData) });
   } catch (error) {
     return { error: error instanceof Error ? error.message : "Não foi possível salvar o presente." };
   }

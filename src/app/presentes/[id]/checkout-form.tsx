@@ -20,7 +20,7 @@ function SubmitButton() {
       className="h-12 w-full rounded-full bg-[#596653] text-white hover:bg-[#46513f]"
     >
       {pending ? <LoaderCircle className="animate-spin" /> : <Gift />}
-      {pending ? "Registrando..." : "Confirmar escolha"}
+      {pending ? "Abrindo pagamento..." : "Presentear com InfinitePay"}
     </Button>
   );
 }
@@ -61,7 +61,7 @@ export function CheckoutForm({ giftId, available }: { giftId: string; available:
       ) : null}
       <SubmitButton />
       <p className="text-center text-xs leading-5 text-[#7e7868]">
-        Nenhuma cobrança será feita agora. O pagamento será integrado em uma próxima etapa.
+        Você será direcionado ao checkout seguro da InfinitePay para pagar com Pix ou cartão.
       </p>
     </form>
   );

@@ -51,8 +51,8 @@ export default async function GiftsPage() {
         <footer className="mx-auto mt-14 flex max-w-2xl items-start gap-3 rounded-2xl border border-white/80 bg-white/55 p-5 text-sm leading-6 text-[#665a52] backdrop-blur sm:items-center sm:p-6">
           <ShieldCheck className="mt-0.5 size-5 shrink-0 text-[#596653] sm:mt-0" />
           <p>
-            Esta é uma demonstração do catálogo. O pagamento seguro será
-            ativado na próxima etapa do projeto.
+            O pagamento é realizado no checkout seguro da InfinitePay. A confirmação
+            do presente acontece automaticamente após a aprovação.
           </p>
         </footer>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
-import { LoaderCircle, Save } from "lucide-react";
+import { useActionState, useRef, useState } from "react";
+import { ImagePlus, LoaderCircle, Save, X } from "lucide-react";
 import { useFormStatus } from "react-dom";
 
 import type { GiftFormState } from "@/app/admin/actions";
@@ -44,6 +44,22 @@ function SubmitButton() {
 
 export function GiftForm({ action, gift }: GiftFormProps) {
   const [state, formAction] = useActionState(action, initialState);
+  const [previewUrl, setPreviewUrl] = useState(gift?.imageUrl ?? "");
+  const [selectedFileName, setSelectedFileName] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function selectImage(file?: File) {
+    if (!file) return;
+    setSelectedFileName(file.name);
+    setPreviewUrl(URL.createObjectURL(file));
+  }
+
+  function clearSelectedImage() {
+    if (previewUrl.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
+    setSelectedFileName("");
+    setPreviewUrl(gift?.imageUrl ?? "");
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
 
   return (
     <form action={formAction} className="space-y-6">
@@ -68,19 +84,63 @@ export function GiftForm({ action, gift }: GiftFormProps) {
             placeholder="Conte aos convidados o que este presente representa."
           />
         </label>
-        <label className="sm:col-span-2">
-          <span className="text-sm font-medium text-[#665a52]">Imagem</span>
-          <input
-            className={inputClassName}
-            name="imageUrl"
-            required
-            defaultValue={gift?.imageUrl ?? "/gifts/romantic-dinner.svg"}
-            placeholder="/gifts/imagem.svg ou https://..."
-          />
-          <span className="mt-2 block text-xs text-[#7e7868]">
-            Por enquanto, use uma imagem da pasta public ou uma URL HTTPS.
-          </span>
-        </label>
+        <div className="sm:col-span-2">
+          <span className="text-sm font-medium text-[#665a52]">Foto do presente</span>
+          <div className="mt-2 grid gap-4 rounded-3xl border border-[#d8cbc0] bg-white/55 p-4 sm:grid-cols-[180px_1fr] sm:p-5">
+            <div
+              className="aspect-[4/3] overflow-hidden rounded-2xl bg-[#efe3d7] bg-cover bg-center"
+              style={previewUrl ? { backgroundImage: `url("${previewUrl}")` } : undefined}
+            >
+              {!previewUrl ? (
+                <span className="grid h-full place-items-center text-[#9a8c82]">
+                  <ImagePlus className="size-9" />
+                </span>
+              ) : null}
+            </div>
+
+            <div className="flex flex-col justify-center">
+              <label className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#596653] px-5 text-sm font-medium text-white transition hover:bg-[#46513f] sm:self-start">
+                <ImagePlus className="size-4" />
+                Escolher foto do dispositivo
+                <input
+                  ref={fileInputRef}
+                  className="sr-only"
+                  name="imageFile"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/avif"
+                  onChange={(event) => selectImage(event.target.files?.[0])}
+                />
+              </label>
+              <p className="mt-3 text-xs leading-5 text-[#7e7868]">
+                JPG, PNG, WebP ou AVIF, com no máximo 5 MB.
+              </p>
+              {selectedFileName ? (
+                <button
+                  type="button"
+                  onClick={clearSelectedImage}
+                  className="mt-2 inline-flex items-center gap-1 self-start text-xs font-medium text-[#76564f] hover:underline"
+                >
+                  <X className="size-3.5" /> Remover {selectedFileName}
+                </button>
+              ) : null}
+            </div>
+          </div>
+
+          <details className="mt-3 rounded-2xl border border-[#d8cbc0]/70 bg-white/40 px-4 py-3">
+            <summary className="cursor-pointer text-sm font-medium text-[#665a52]">
+              Ou usar o endereço de uma imagem
+            </summary>
+            <input
+              className={inputClassName}
+              name="imageUrl"
+              defaultValue={gift?.imageUrl ?? ""}
+              onChange={(event) => {
+                if (!selectedFileName) setPreviewUrl(event.target.value);
+              }}
+              placeholder="/gifts/imagem.svg ou https://..."
+            />
+          </details>
+        </div>
         <label>
           <span className="text-sm font-medium text-[#665a52]">Valor (R$)</span>
           <input
