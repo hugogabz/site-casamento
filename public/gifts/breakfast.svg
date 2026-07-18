@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title description">
+  <title id="title">Café da manhã especial</title>
+  <desc id="description">Bandeja com café, flores e croissant</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f1e5da"/><stop offset="1" stop-color="#c7d0bd"/></linearGradient></defs>
+  <rect width="1200" height="900" fill="url(#bg)"/><circle cx="190" cy="145" r="250" fill="#fff" opacity=".24"/><circle cx="1060" cy="800" r="300" fill="#9f6d65" opacity=".12"/>
+  <ellipse cx="600" cy="690" rx="475" ry="130" fill="#725a4e" opacity=".22"/><rect x="170" y="405" width="860" height="300" rx="50" fill="#d7b9a3"/><rect x="205" y="440" width="790" height="230" rx="35" fill="#f8f2ea"/>
+  <g><ellipse cx="420" cy="555" rx="140" ry="90" fill="#fff"/><ellipse cx="420" cy="545" rx="100" ry="58" fill="#665a52"/><path d="M545 510c90-25 104 108 9 115" fill="none" stroke="#fff" stroke-width="30"/></g>
+  <g fill="none" stroke="#b78055" stroke-width="46" stroke-linecap="round"><path d="M655 560c45-95 145-96 197-10"/><path d="M674 592c54-54 126-58 173-9"/></g>
+  <g><path d="M575 480c-8-104 14-175 42-230 17 84 12 155-17 231z" fill="#596653"/><path d="M593 355c-75-61-96-111-105-164 66 36 99 78 112 137z" fill="#6f8065"/><g fill="#9f6d65"><circle cx="563" cy="292" r="38"/><circle cx="619" cy="270" r="43"/><circle cx="650" cy="322" r="36"/></g></g>
+</svg>

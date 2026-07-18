@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CalendarDays, Heart } from "lucide-react";
+import { CalendarDays, Gift, Heart } from "lucide-react";
+import Link from "next/link";
 import { toast, Toaster } from "sonner";
 import { create } from "zustand";
 
@@ -55,14 +56,23 @@ export default function Home() {
           <span>Data e local em breve</span>
         </div>
 
-        <Button
-          size="lg"
-          onClick={handleConfirmation}
-          disabled={confirmed}
-          className="rounded-full bg-[#596653] px-8 text-white hover:bg-[#46513f]"
-        >
-          {confirmed ? "Presença confirmada" : "Quero participar"}
-        </Button>
+        <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Button
+            size="lg"
+            onClick={handleConfirmation}
+            disabled={confirmed}
+            className="h-11 rounded-full bg-[#596653] px-8 text-white hover:bg-[#46513f]"
+          >
+            {confirmed ? "Presença confirmada" : "Quero participar"}
+          </Button>
+          <Link
+            href="/presentes"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-[#9f6d65]/35 bg-white/45 px-7 text-sm font-medium text-[#76564f] transition-colors hover:bg-white/80"
+          >
+            <Gift className="size-4" />
+            Ver lista de presentes
+          </Link>
+        </div>
       </motion.section>
 
       <Toaster richColors position="top-center" />

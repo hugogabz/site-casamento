@@ -11,3 +11,44 @@ generator client {
 datasource db {
   provider = "sqlite"
 }
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELED
+  REFUNDED
+}
+
+model Gift {
+  id             String      @id @default(cuid())
+  name           String
+  description    String
+  imageUrl       String
+  priceInCents   Int
+  quantity       Int
+  giftedQuantity Int         @default(0)
+  isActive       Boolean     @default(true)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  orders         GiftOrder[]
+}
+
+model GiftOrder {
+  id               String        @id @default(cuid())
+  giftId           String
+  quantity         Int
+  unitPriceInCents Int
+  totalInCents     Int
+  guestName        String?
+  guestEmail       String?
+  status           PaymentStatus @default(PENDING)
+  paymentProvider  String?
+  paymentReference String?       @unique
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  gift             Gift          @relation(fields: [giftId], references: [id], onDelete: Restrict)
+
+  @@index([giftId])
+  @@index([status])
+}
