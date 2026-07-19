@@ -1,5 +1,4 @@
 import { CalendarDays, ChevronDown, Clock3, Gift, Heart, MapPin } from "lucide-react";
-import Link from "next/link";
 
 import { GiftGrid } from "@/components/gifts/gift-grid";
 import { AnimatedSection } from "@/components/home/animated-section";
@@ -30,9 +29,9 @@ export default async function Home() {
             <span className="h-px flex-1 bg-[#596653]/25" />
           </div>
           <div className="mt-10 flex justify-center">
-            <Link href="#presentes" className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-[#9f6d65]/35 bg-white/45 px-8 text-sm font-medium text-[#76564f] transition hover:-translate-y-0.5 hover:bg-white/80">
+            <a href="#presentes" className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-[#9f6d65]/35 bg-white/45 px-8 text-sm font-medium text-[#76564f] transition hover:-translate-y-0.5 hover:bg-white/80">
               <Gift className="size-4" /> Lista de presentes
-            </Link>
+            </a>
           </div>
         </AnimatedSection>
 
