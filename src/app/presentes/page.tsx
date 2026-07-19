@@ -27,7 +27,7 @@ export default async function GiftsPage() {
             className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-[#665a52] transition-colors hover:bg-white/60 hover:text-[#44362f]"
           >
             <ArrowLeft className="size-4" />
-            Voltar ao convite
+            Voltar ao início
           </Link>
           <Heart className="size-6 fill-[#9f6d65] text-[#9f6d65]" />
         </nav>
@@ -40,9 +40,8 @@ export default async function GiftsPage() {
             Lista de presentes
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#665a52] sm:text-lg">
-            Sua presença já é o nosso maior presente. Se desejar tornar este
-            novo capítulo ainda mais especial, preparamos algumas experiências
-            com muito carinho.
+            Se desejar tornar este novo capítulo ainda mais especial,
+            preparamos algumas experiências com muito carinho.
           </p>
         </header>
 

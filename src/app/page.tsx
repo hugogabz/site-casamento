@@ -1,4 +1,4 @@
-import { CalendarDays, ChevronDown, Clock3, Gift, Heart, MapPin, TicketCheck } from "lucide-react";
+import { CalendarDays, ChevronDown, Clock3, Gift, Heart, MapPin } from "lucide-react";
 import Link from "next/link";
 
 import { GiftGrid } from "@/components/gifts/gift-grid";
@@ -29,10 +29,7 @@ export default async function Home() {
             <span>{wedding.dateLabel}</span>
             <span className="h-px flex-1 bg-[#596653]/25" />
           </div>
-          <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link href="/convites" className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#596653] px-8 text-sm font-medium text-white transition hover:-translate-y-0.5 hover:bg-[#46513f]">
-              <TicketCheck className="size-4" /> Confirmar presença
-            </Link>
+          <div className="mt-10 flex justify-center">
             <Link href="#presentes" className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-[#9f6d65]/35 bg-white/45 px-8 text-sm font-medium text-[#76564f] transition hover:-translate-y-0.5 hover:bg-white/80">
               <Gift className="size-4" /> Lista de presentes
             </Link>
@@ -83,14 +80,10 @@ export default async function Home() {
           <div className="mx-auto mb-12 max-w-3xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#9f6d65]">Com carinho</p>
             <h2 className="mt-5 font-serif text-4xl sm:text-5xl">Lista de presentes</h2>
-            <p className="mx-auto mt-5 max-w-2xl leading-7 text-[#665a52]">Sua presença já é o nosso maior presente. Se desejar, escolha uma experiência para tornar este novo capítulo ainda mais especial.</p>
+            <p className="mx-auto mt-5 max-w-2xl leading-7 text-[#665a52]">Se desejar tornar este novo capítulo ainda mais especial, escolha uma experiência preparada com carinho pelos noivos.</p>
           </div>
           <GiftGrid gifts={gifts} />
         </AnimatedSection>
-      </section>
-
-      <section className="px-5 py-24 text-center sm:px-8 sm:py-32">
-        <AnimatedSection className="mx-auto max-w-2xl"><Heart className="mx-auto size-7 fill-[#9f6d65] text-[#9f6d65]" /><h2 className="mt-6 font-serif text-4xl sm:text-5xl">Queremos celebrar com você</h2><p className="mt-5 leading-7 text-[#665a52]">Confirme sua presença e informe o nome de cada acompanhante para a lista da recepção.</p><Link href="/convites" className="mt-8 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#596653] px-8 text-sm font-medium text-white transition hover:bg-[#46513f]"><TicketCheck className="size-4" /> Confirmar presença</Link></AnimatedSection>
       </section>
 
       <footer className="border-t border-[#ded2c8] px-5 py-8 text-center text-sm text-[#7e7868]">Feito com carinho para {wedding.couple.first} & {wedding.couple.second}</footer>
