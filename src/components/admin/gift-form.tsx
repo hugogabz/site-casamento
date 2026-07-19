@@ -112,7 +112,8 @@ export function GiftForm({ action, gift }: GiftFormProps) {
                 />
               </label>
               <p className="mt-3 text-xs leading-5 text-[#7e7868]">
-                JPG, PNG, WebP ou AVIF, com no máximo 5 MB.
+                Use fotos horizontais em 4:3, preferencialmente 1200 × 900 px. JPG, PNG,
+                WebP ou AVIF, com no máximo 5 MB.
               </p>
               {selectedFileName ? (
                 <button

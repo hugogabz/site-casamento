@@ -23,7 +23,7 @@ export function AdminHeader() {
             className="inline-flex h-9 items-center gap-2 rounded-full px-3 text-sm font-medium text-[#665a52] transition hover:bg-white"
           >
             <TicketCheck className="size-4" />
-            <span className="hidden md:inline">Convites</span>
+            <span className="hidden md:inline">Confirmações</span>
           </Link>
           <Link
             href="/admin/presentes"

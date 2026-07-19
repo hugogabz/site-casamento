@@ -1,9 +1,9 @@
 import { ArrowLeft, Heart } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { CheckoutForm } from "@/app/presentes/[id]/checkout-form";
+import { GiftImage } from "@/components/gifts/gift-image";
 import { getGiftById } from "@/services/gifts";
 
 const currencyFormatter = new Intl.NumberFormat("pt-BR", {
@@ -30,9 +30,13 @@ export default async function GiftCheckoutPage({ params }: { params: Promise<{ i
         </nav>
 
         <section className="mt-8 grid overflow-hidden rounded-[2rem] border border-white/80 bg-white/65 shadow-xl shadow-[#6f5745]/10 backdrop-blur md:grid-cols-[1.05fr_0.95fr]">
-          <div className="relative min-h-72 bg-[#efe3d7] md:min-h-[620px]">
-            <Image src={gift.imageUrl} alt={gift.name} fill priority className="object-cover" sizes="(max-width: 768px) 100vw, 52vw" />
-          </div>
+          <GiftImage
+            src={gift.imageUrl}
+            alt={`Imagem do presente ${gift.name}`}
+            priority
+            sizes="(max-width: 768px) 100vw, 52vw"
+            className="aspect-[4/3] md:aspect-auto md:min-h-[520px]"
+          />
           <div className="p-6 sm:p-9 lg:p-11">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#7e7868]">Sua escolha</p>
             <h1 className="mt-3 font-serif text-3xl sm:text-4xl">{gift.name}</h1>

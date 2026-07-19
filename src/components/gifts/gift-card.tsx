@@ -2,9 +2,9 @@
 
 import { motion } from "framer-motion";
 import { Gift as GiftIcon, Sparkles } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
+import { GiftImage } from "@/components/gifts/gift-image";
 import { getAvailableQuantity, type Gift } from "@/types/gift";
 
 type GiftCardProps = {
@@ -31,12 +31,12 @@ export function GiftCard({ gift, index }: GiftCardProps) {
       className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-white/80 bg-white/75 shadow-lg shadow-[#6f5745]/10 backdrop-blur transition-shadow duration-300 hover:shadow-xl hover:shadow-[#6f5745]/15"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-[#efe3d7]">
-        <Image
+        <GiftImage
           src={gift.imageUrl}
-          alt={`Ilustração do presente ${gift.name}`}
-          fill
+          alt={`Imagem do presente ${gift.name}`}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+          className="h-full w-full"
+          imageClassName="transition-transform duration-700 group-hover:scale-[1.03]"
         />
         <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[#596653] shadow-sm backdrop-blur">
           {isSoldOut ? "Esgotado" : `${availableQuantity} disponível${availableQuantity > 1 ? "is" : ""}`}

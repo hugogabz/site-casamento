@@ -1,60 +1,72 @@
-import { Clock3, TicketCheck, UsersRound } from "lucide-react";
+import { Mail, Phone, UserRound, UsersRound } from "lucide-react";
 
-import { InviteSettingsForm } from "@/components/admin/invite-settings-form";
-import { getAdminInviteReservations, getInviteAvailability, getInviteSettings } from "@/services/invites";
-import { INVITE_STATUS } from "@/types/invite";
+import { getAdminInviteReservations } from "@/services/invites";
 
-const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
-const date = new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" });
-
-const statusLabel: Record<string, string> = {
-  PENDING: "Aguardando pagamento",
-  PAID: "Confirmado",
-  EXPIRED: "Expirado",
-  CANCELED: "Cancelado",
-  REFUNDED: "Reembolsado",
-};
+const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
+  dateStyle: "short",
+  timeStyle: "short",
+});
 
 export default async function AdminInvitesPage() {
-  const [settings, availability, reservations] = await Promise.all([
-    getInviteSettings(), getInviteAvailability(), getAdminInviteReservations(),
-  ]);
-  const confirmed = reservations.filter((item) => item.status === INVITE_STATUS.PAID);
-  const confirmedPeople = confirmed.reduce((total, item) => total + item.quantity, 0);
+  const confirmations = (await getAdminInviteReservations()).filter((item) =>
+    ["CONFIRMED", "PAID"].includes(item.status),
+  );
+  const confirmedPeople = confirmations.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <main className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12 lg:px-12">
       <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#7e7868]">Entrada da festa</p>
-      <h1 className="mt-2 font-serif text-3xl sm:text-4xl">Convites e lista de convidados</h1>
-      <p className="mt-2 text-sm text-[#665a52]">Configure as vendas e consulte os nomes confirmados para a recepção.</p>
+      <h1 className="mt-2 font-serif text-3xl sm:text-4xl">Lista de convidados confirmados</h1>
+      <p className="mt-2 text-sm text-[#665a52]">Consulte o titular e os acompanhantes informados na confirmação de presença.</p>
 
-      <section className="mt-8 grid gap-4 sm:grid-cols-3">
-        {[
-          [TicketCheck, "Convites confirmados", confirmedPeople],
-          [UsersRound, "Disponíveis", availability.available],
-          [Clock3, "Reservas pendentes", reservations.filter((item) => item.status === INVITE_STATUS.PENDING).length],
-        ].map(([Icon, label, value]) => {
-          const IconComponent = Icon as typeof TicketCheck;
-          return <div key={String(label)} className="rounded-2xl border border-white/80 bg-white/60 p-5 shadow-sm"><IconComponent className="size-5 text-[#596653]" /><p className="mt-3 text-sm text-[#7e7868]">{String(label)}</p><p className="mt-1 text-2xl font-semibold">{String(value)}</p></div>;
-        })}
-      </section>
-
-      <section className="mt-8 rounded-3xl border border-white/80 bg-white/65 p-6 shadow-sm sm:p-8">
-        <h2 className="font-serif text-2xl">Configurações dos convites</h2>
-        <p className="mt-2 mb-6 text-sm text-[#665a52]">O prazo bloqueia temporariamente o estoque durante o pagamento.</p>
-        <InviteSettingsForm settings={settings} />
-      </section>
-
-      <section className="mt-8">
-        <div className="flex items-end justify-between gap-4"><div><h2 className="font-serif text-2xl">Lista para conferência</h2><p className="mt-1 text-sm text-[#665a52]">Somente os confirmados poderão entrar na lista oficial.</p></div><p className="text-sm font-medium text-[#596653]">{currency.format(settings.invitePriceInCents / 100)} por pessoa</p></div>
-        <div className="mt-5 space-y-4">
-          {reservations.length === 0 ? <div className="rounded-3xl border border-dashed border-[#cbbcb0] p-10 text-center text-sm text-[#665a52]">Nenhuma reserva registrada.</div> : reservations.map((reservation) => (
-            <article key={reservation.id} className="rounded-3xl border border-white/80 bg-white/65 p-5 shadow-sm sm:p-6">
-              <div className="flex flex-wrap items-start justify-between gap-3"><div><h3 className="font-serif text-xl">{reservation.buyerName}</h3><p className="mt-1 text-sm text-[#7e7868]">{reservation.buyerEmail} · {reservation.quantity} convite(s) · {date.format(reservation.createdAt)}</p></div><span className={`rounded-full px-3 py-1 text-xs font-semibold ${reservation.status === INVITE_STATUS.PAID ? "bg-[#9faf94]/25 text-[#596653]" : "bg-[#d7b9a3]/25 text-[#76564f]"}`}>{statusLabel[reservation.status] ?? reservation.status}</span></div>
-              <div className="mt-5 border-t border-[#ded2c8] pt-4"><p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7e7868]">Nomes vinculados</p><ul className="mt-3 grid gap-2 sm:grid-cols-2">{reservation.guests.map((guest) => <li key={guest.id} className="rounded-xl bg-white/55 px-3 py-2 text-sm">{guest.name}{guest.isBuyer ? " (comprador)" : ""}</li>)}</ul></div>
-            </article>
-          ))}
+      <section className="mt-8 grid gap-4 sm:grid-cols-2">
+        <div className="rounded-2xl border border-white/80 bg-white/60 p-5 shadow-sm">
+          <UserRound className="size-5 text-[#596653]" />
+          <p className="mt-3 text-sm text-[#7e7868]">Confirmações recebidas</p>
+          <p className="mt-1 text-2xl font-semibold">{confirmations.length}</p>
         </div>
+        <div className="rounded-2xl border border-white/80 bg-white/60 p-5 shadow-sm">
+          <UsersRound className="size-5 text-[#596653]" />
+          <p className="mt-3 text-sm text-[#7e7868]">Pessoas confirmadas</p>
+          <p className="mt-1 text-2xl font-semibold">{confirmedPeople}</p>
+        </div>
+      </section>
+
+      <section className="mt-8 space-y-4">
+        {confirmations.length === 0 ? (
+          <div className="rounded-3xl border border-dashed border-[#cbbcb0] bg-white/40 p-10 text-center">
+            <UsersRound className="mx-auto size-9 text-[#596653]" />
+            <h2 className="mt-4 font-serif text-2xl">Nenhuma presença confirmada</h2>
+            <p className="mt-2 text-sm text-[#665a52]">As confirmações aparecerão aqui automaticamente.</p>
+          </div>
+        ) : confirmations.map((confirmation) => (
+          <article key={confirmation.id} className="rounded-3xl border border-white/80 bg-white/65 p-5 shadow-sm sm:p-6">
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+              <div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <h2 className="font-serif text-xl">{confirmation.buyerName}</h2>
+                  <span className="rounded-full bg-[#9faf94]/25 px-3 py-1 text-xs font-semibold text-[#596653]">Confirmado</span>
+                </div>
+                <p className="mt-2 text-sm text-[#7e7868]">Confirmado em {dateFormatter.format(confirmation.createdAt)}</p>
+              </div>
+              <p className="text-sm font-medium text-[#596653]">{confirmation.quantity} pessoa(s)</p>
+            </div>
+
+            <div className="mt-5 grid gap-3 border-t border-[#ded2c8] pt-5 text-sm text-[#665a52] sm:grid-cols-2">
+              <p className="flex items-center gap-2"><Mail className="size-4 text-[#596653]" /> {confirmation.buyerEmail}</p>
+              {confirmation.buyerPhone ? <p className="flex items-center gap-2"><Phone className="size-4 text-[#596653]" /> {confirmation.buyerPhone}</p> : null}
+            </div>
+
+            <div className="mt-5 rounded-2xl bg-white/55 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#7e7868]">Nomes para a entrada</p>
+              <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+                {confirmation.guests.map((guest) => (
+                  <li key={guest.id} className="flex items-center gap-2 text-sm text-[#44362f]"><UserRound className="size-4 text-[#9f6d65]" /> {guest.name}{guest.isBuyer ? " (titular)" : ""}</li>
+                ))}
+              </ul>
+            </div>
+          </article>
+        ))}
       </section>
     </main>
   );

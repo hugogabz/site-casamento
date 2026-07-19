@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
 import { checkInfinitePayPayment } from "@/services/infinite-pay";
-import { confirmPaidInvite, confirmPaidOrder } from "@/services/order-status";
+import { confirmPaidOrder } from "@/services/order-status";
 
 type InfinitePayWebhook = {
   invoice_slug?: string;
@@ -18,24 +18,19 @@ export async function POST(request: Request) {
       throw new Error("Notificação incompleta.");
     }
 
-    const [order, invite] = await Promise.all([
-      prisma.giftOrder.findUnique({ where: { id: payload.order_nsu } }),
-      prisma.inviteReservation.findUnique({ where: { id: payload.order_nsu } }),
-    ]);
-    const transaction = order ?? invite;
-    if (!transaction) throw new Error("Pedido não encontrado.");
+    const order = await prisma.giftOrder.findUnique({ where: { id: payload.order_nsu } });
+    if (!order) throw new Error("Pedido não encontrado.");
 
     const payment = await checkInfinitePayPayment({
-      orderId: transaction.id,
+      orderId: order.id,
       transactionNsu: payload.transaction_nsu,
       invoiceSlug: payload.invoice_slug,
     });
-    if (!payment.success || !payment.paid || payment.amount !== transaction.totalInCents) {
+    if (!payment.success || !payment.paid || payment.amount !== order.totalInCents) {
       throw new Error("Pagamento não confirmado.");
     }
 
-    if (order) await confirmPaidOrder(order.id, payload.transaction_nsu);
-    else await confirmPaidInvite(transaction.id, payload.transaction_nsu);
+    await confirmPaidOrder(order.id, payload.transaction_nsu);
     return NextResponse.json({ success: true, message: null });
   } catch (error) {
     return NextResponse.json(

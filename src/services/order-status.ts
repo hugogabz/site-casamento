@@ -30,28 +30,3 @@ export async function confirmPaidOrder(orderId: string, paymentReference: string
     });
   });
 }
-
-export async function confirmPaidInvite(reservationId: string, paymentReference: string) {
-  await prisma.$transaction(async (transaction) => {
-    const reservation = await transaction.inviteReservation.findUnique({ where: { id: reservationId } });
-    if (!reservation) throw new Error("Reserva não encontrada.");
-    if (reservation.status === ORDER_STATUS.PAID) return;
-    if (reservation.status !== ORDER_STATUS.PENDING && reservation.status !== "EXPIRED") {
-      throw new Error("Reserva não pode ser confirmada.");
-    }
-
-    const settings = await transaction.weddingSettings.findUniqueOrThrow({ where: { id: "wedding" } });
-    const confirmed = await transaction.inviteReservation.aggregate({
-      where: { status: ORDER_STATUS.PAID },
-      _sum: { quantity: true },
-    });
-    if ((confirmed._sum.quantity ?? 0) + reservation.quantity > settings.totalInvites) {
-      throw new Error("Não há convites suficientes para confirmar este pagamento.");
-    }
-
-    await transaction.inviteReservation.update({
-      where: { id: reservation.id },
-      data: { status: ORDER_STATUS.PAID, paymentProvider: "INFINITE_PAY", paymentReference },
-    });
-  });
-}
