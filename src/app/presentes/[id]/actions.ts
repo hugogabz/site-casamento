@@ -27,25 +27,40 @@ export async function createGiftOrder(
       throw new Error("Informe um e-mail válido.");
     }
 
-    const quantity = Number(formData.get("quantity"));
+    const gift = await prisma.gift.findUnique({ where: { id: giftId } });
+    if (!gift || !gift.isActive) throw new Error("Este presente não está mais disponível.");
+
+    const quantity = gift.allowsCustomAmount ? 1 : Number(formData.get("quantity"));
     if (!Number.isInteger(quantity) || quantity < 1) {
       throw new Error("Escolha uma quantidade válida.");
     }
 
-    const gift = await prisma.gift.findUnique({ where: { id: giftId } });
-    if (!gift || !gift.isActive) throw new Error("Este presente não está mais disponível.");
+    const customAmount = Number(String(formData.get("customAmount") ?? "").replace(",", "."));
+    const unitPriceInCents = gift.allowsCustomAmount
+      ? Math.round(customAmount * 100)
+      : gift.priceInCents;
+    if (gift.allowsCustomAmount && (
+      !Number.isFinite(customAmount)
+      || !Number.isSafeInteger(unitPriceInCents)
+      || unitPriceInCents < gift.priceInCents
+      || unitPriceInCents > 10_000_000
+    )) {
+      throw new Error(`Escolha um valor entre R$ ${(gift.priceInCents / 100).toFixed(2).replace(".", ",")} e R$ 100.000,00.`);
+    }
 
-    const available = gift.quantity - gift.giftedQuantity;
-    if (quantity > available) {
-      throw new Error(`Restam apenas ${available} unidade(s) deste presente.`);
+    if (!gift.allowsCustomAmount) {
+      const available = gift.quantity - gift.giftedQuantity;
+      if (quantity > available) {
+        throw new Error(`Restam apenas ${available} unidade(s) deste presente.`);
+      }
     }
 
     const order = await prisma.giftOrder.create({
       data: {
         giftId,
         quantity,
-        unitPriceInCents: gift.priceInCents,
-        totalInCents: gift.priceInCents * quantity,
+        unitPriceInCents,
+        totalInCents: unitPriceInCents * quantity,
         guestName,
         guestEmail,
         guestMessage: String(formData.get("guestMessage") ?? "").trim() || null,
@@ -57,7 +72,7 @@ export async function createGiftOrder(
         orderId: order.id,
         description: gift.name,
         quantity,
-        priceInCents: gift.priceInCents,
+        priceInCents: unitPriceInCents,
         customerName: guestName,
         customerEmail: guestEmail,
       });

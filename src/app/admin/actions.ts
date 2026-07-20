@@ -26,15 +26,18 @@ function getNonNegativeInteger(formData: FormData, name: string) {
 }
 
 async function parseGiftForm(formData: FormData) {
+  const allowsCustomAmount = formData.get("allowsCustomAmount") === "on";
   const price = Number(String(formData.get("price") ?? "").replace(",", "."));
   if (!Number.isFinite(price) || price <= 0) {
     throw new Error("Informe um valor maior que zero.");
   }
 
-  const quantity = getNonNegativeInteger(formData, "quantity");
+  const quantity = allowsCustomAmount ? 1 : getNonNegativeInteger(formData, "quantity");
   if (quantity < 1) throw new Error("A quantidade total deve ser pelo menos 1.");
 
-  const giftedQuantity = getNonNegativeInteger(formData, "giftedQuantity");
+  const giftedQuantity = allowsCustomAmount
+    ? 0
+    : getNonNegativeInteger(formData, "giftedQuantity");
   if (giftedQuantity > quantity) {
     throw new Error("A quantidade presenteada não pode superar o total.");
   }
@@ -54,6 +57,7 @@ async function parseGiftForm(formData: FormData) {
     priceInCents: Math.round(price * 100),
     quantity,
     giftedQuantity,
+    allowsCustomAmount,
     isActive: formData.get("isActive") === "on",
   };
 }

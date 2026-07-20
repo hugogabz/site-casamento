@@ -25,7 +25,17 @@ function SubmitButton() {
   );
 }
 
-export function CheckoutForm({ giftId, available }: { giftId: string; available: number }) {
+export function CheckoutForm({
+  giftId,
+  available,
+  allowsCustomAmount,
+  minimumAmountInCents,
+}: {
+  giftId: string;
+  available: number;
+  allowsCustomAmount: boolean;
+  minimumAmountInCents: number;
+}) {
   const action = createGiftOrder.bind(null, giftId);
   const [state, formAction] = useActionState(action, initialState);
 
@@ -39,14 +49,35 @@ export function CheckoutForm({ giftId, available }: { giftId: string; available:
         <span className="text-sm font-medium text-[#665a52]">Seu e-mail</span>
         <input className={inputClassName} name="guestEmail" type="email" required autoComplete="email" />
       </label>
-      <label className="block">
-        <span className="text-sm font-medium text-[#665a52]">Quantidade</span>
-        <select className={inputClassName} name="quantity" defaultValue="1">
-          {Array.from({ length: available }, (_, index) => index + 1).map((quantity) => (
-            <option key={quantity} value={quantity}>{quantity}</option>
-          ))}
-        </select>
-      </label>
+      {allowsCustomAmount ? (
+        <label className="block">
+          <span className="text-sm font-medium text-[#665a52]">Quanto você deseja contribuir?</span>
+          <div className="relative">
+            <span className="pointer-events-none absolute left-4 top-1/2 mt-1 -translate-y-1/2 text-[#7e7868]">R$</span>
+            <input
+              className={`${inputClassName} pl-12`}
+              name="customAmount"
+              type="number"
+              inputMode="decimal"
+              min={(minimumAmountInCents / 100).toFixed(2)}
+              max="100000"
+              step="0.01"
+              required
+              defaultValue={(minimumAmountInCents / 100).toFixed(2)}
+            />
+          </div>
+          <span className="mt-2 block text-xs text-[#7e7868]">Escolha qualquer valor a partir do mínimo indicado.</span>
+        </label>
+      ) : (
+        <label className="block">
+          <span className="text-sm font-medium text-[#665a52]">Quantidade</span>
+          <select className={inputClassName} name="quantity" defaultValue="1">
+            {Array.from({ length: available }, (_, index) => index + 1).map((quantity) => (
+              <option key={quantity} value={quantity}>{quantity}</option>
+            ))}
+          </select>
+        </label>
+      )}
       <label className="block">
         <span className="text-sm font-medium text-[#665a52]">Mensagem para os noivos (opcional)</span>
         <textarea

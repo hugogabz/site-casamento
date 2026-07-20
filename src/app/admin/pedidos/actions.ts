@@ -26,14 +26,16 @@ export async function updateOrderStatus(orderId: string, nextStatus: OrderStatus
         if (order.status !== ORDER_STATUS.PENDING) {
           throw new Error("Somente pedidos pendentes podem ser confirmados.");
         }
-        const available = order.gift.quantity - order.gift.giftedQuantity;
-        if (order.quantity > available) {
-          throw new Error(`Estoque insuficiente: restam ${available} unidade(s).`);
+        if (!order.gift.allowsCustomAmount) {
+          const available = order.gift.quantity - order.gift.giftedQuantity;
+          if (order.quantity > available) {
+            throw new Error(`Estoque insuficiente: restam ${available} unidade(s).`);
+          }
+          await transaction.gift.update({
+            where: { id: order.giftId },
+            data: { giftedQuantity: { increment: order.quantity } },
+          });
         }
-        await transaction.gift.update({
-          where: { id: order.giftId },
-          data: { giftedQuantity: { increment: order.quantity } },
-        });
       } else if (nextStatus === ORDER_STATUS.CANCELED) {
         if (order.status !== ORDER_STATUS.PENDING) {
           throw new Error("Somente pedidos pendentes podem ser cancelados.");
@@ -42,10 +44,12 @@ export async function updateOrderStatus(orderId: string, nextStatus: OrderStatus
         if (order.status !== ORDER_STATUS.PAID) {
           throw new Error("Somente pedidos pagos podem ser reembolsados.");
         }
-        await transaction.gift.update({
-          where: { id: order.giftId },
-          data: { giftedQuantity: { decrement: order.quantity } },
-        });
+        if (!order.gift.allowsCustomAmount) {
+          await transaction.gift.update({
+            where: { id: order.giftId },
+            data: { giftedQuantity: { decrement: order.quantity } },
+          });
+        }
       } else {
         throw new Error("Não é possível voltar um pedido para pendente.");
       }

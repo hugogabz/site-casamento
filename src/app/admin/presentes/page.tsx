@@ -15,7 +15,9 @@ export default async function AdminGiftsPage() {
   const gifts = await getAdminGifts();
   const activeGifts = gifts.filter((gift) => gift.isActive).length;
   const availableUnits = gifts.reduce(
-    (total, gift) => total + Math.max(gift.quantity - gift.giftedQuantity, 0),
+    (total, gift) => total + (gift.allowsCustomAmount
+      ? 0
+      : Math.max(gift.quantity - gift.giftedQuantity, 0)),
     0,
   );
 
@@ -76,7 +78,11 @@ export default async function AdminGiftsPage() {
                   <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#665a52]">{gift.description}</p>
                   <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm">
                     <span><strong>{currencyFormatter.format(gift.priceInCents / 100)}</strong></span>
-                    <span>{available} de {gift.quantity} disponíveis</span>
+                    <span>
+                      {gift.allowsCustomAmount
+                        ? "Contribuição livre"
+                        : `${available} de ${gift.quantity} disponíveis`}
+                    </span>
                     <span>{gift._count.orders} pedido(s)</span>
                   </div>
                 </div>

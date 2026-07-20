@@ -8,6 +8,7 @@ export type Gift = {
   priceInCents: number;
   quantity: number;
   giftedQuantity: number;
+  allowsCustomAmount: boolean;
   status: GiftStatus;
 };
 
@@ -19,5 +20,6 @@ export function getGiftStatus(
 }
 
 export function getAvailableQuantity(gift: Gift) {
+  if (gift.allowsCustomAmount) return Number.POSITIVE_INFINITY;
   return Math.max(gift.quantity - gift.giftedQuantity, 0);
 }

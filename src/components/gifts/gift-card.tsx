@@ -39,7 +39,11 @@ export function GiftCard({ gift, index }: GiftCardProps) {
           imageClassName="transition-transform duration-700 group-hover:scale-[1.03]"
         />
         <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[#596653] shadow-sm backdrop-blur">
-          {isSoldOut ? "Esgotado" : `${availableQuantity} disponível${availableQuantity > 1 ? "is" : ""}`}
+          {gift.allowsCustomAmount
+            ? "Valor livre"
+            : isSoldOut
+              ? "Esgotado"
+              : `${availableQuantity} disponível${availableQuantity > 1 ? "is" : ""}`}
         </div>
       </div>
 
@@ -56,7 +60,7 @@ export function GiftCard({ gift, index }: GiftCardProps) {
           {gift.description}
         </p>
 
-        <div className="mt-6">
+        {!gift.allowsCustomAmount ? <div className="mt-6">
           <div className="mb-2 flex items-center justify-between text-xs text-[#7e7868]">
             <span>{gift.giftedQuantity} presenteado(s)</span>
             <span>{gift.quantity} no total</span>
@@ -67,7 +71,7 @@ export function GiftCard({ gift, index }: GiftCardProps) {
               style={{ width: `${progress}%` }}
             />
           </div>
-        </div>
+        </div> : null}
 
         <div className="mt-6 flex items-center justify-between gap-4 border-t border-[#ded2c8] pt-5">
           <div>
@@ -75,7 +79,9 @@ export function GiftCard({ gift, index }: GiftCardProps) {
               Valor
             </p>
             <p className="mt-1 text-xl font-semibold text-[#44362f]">
-              {currencyFormatter.format(gift.priceInCents / 100)}
+              {gift.allowsCustomAmount
+                ? `A partir de ${currencyFormatter.format(gift.priceInCents / 100)}`
+                : currencyFormatter.format(gift.priceInCents / 100)}
             </p>
           </div>
           {isSoldOut ? (

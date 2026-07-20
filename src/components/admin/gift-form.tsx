@@ -14,6 +14,7 @@ type GiftFormValues = {
   priceInCents: number;
   quantity: number;
   giftedQuantity: number;
+  allowsCustomAmount: boolean;
   isActive: boolean;
 };
 
@@ -46,6 +47,9 @@ export function GiftForm({ action, gift }: GiftFormProps) {
   const [state, formAction] = useActionState(action, initialState);
   const [previewUrl, setPreviewUrl] = useState(gift?.imageUrl ?? "");
   const [selectedFileName, setSelectedFileName] = useState("");
+  const [allowsCustomAmount, setAllowsCustomAmount] = useState(
+    gift?.allowsCustomAmount ?? false,
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function selectImage(file?: File) {
@@ -143,7 +147,9 @@ export function GiftForm({ action, gift }: GiftFormProps) {
           </details>
         </div>
         <label>
-          <span className="text-sm font-medium text-[#665a52]">Valor (R$)</span>
+          <span className="text-sm font-medium text-[#665a52]">
+            {allowsCustomAmount ? "Contribuição mínima (R$)" : "Valor (R$)"}
+          </span>
           <input
             className={inputClassName}
             name="price"
@@ -156,29 +162,50 @@ export function GiftForm({ action, gift }: GiftFormProps) {
             placeholder="280.00"
           />
         </label>
-        <label>
-          <span className="text-sm font-medium text-[#665a52]">Quantidade total</span>
+        {allowsCustomAmount ? (
+          <div className="rounded-2xl border border-[#9faf94]/40 bg-[#9faf94]/10 p-4 text-sm leading-6 text-[#596653]">
+            O convidado escolherá o valor. Essa opção não possui quantidade nem fica esgotada.
+          </div>
+        ) : (
+          <>
+            <label>
+              <span className="text-sm font-medium text-[#665a52]">Quantidade total</span>
+              <input
+                className={inputClassName}
+                name="quantity"
+                type="number"
+                min="1"
+                step="1"
+                required
+                defaultValue={gift?.quantity ?? 1}
+              />
+            </label>
+            <label>
+              <span className="text-sm font-medium text-[#665a52]">Já presenteados</span>
+              <input
+                className={inputClassName}
+                name="giftedQuantity"
+                type="number"
+                min="0"
+                step="1"
+                required
+                defaultValue={gift?.giftedQuantity ?? 0}
+              />
+            </label>
+          </>
+        )}
+        <label className="flex items-center gap-3 rounded-2xl border border-[#d8cbc0] bg-white/55 px-4 py-3 sm:col-span-2">
           <input
-            className={inputClassName}
-            name="quantity"
-            type="number"
-            min="1"
-            step="1"
-            required
-            defaultValue={gift?.quantity ?? 1}
+            name="allowsCustomAmount"
+            type="checkbox"
+            checked={allowsCustomAmount}
+            onChange={(event) => setAllowsCustomAmount(event.target.checked)}
+            className="size-4 accent-[#596653]"
           />
-        </label>
-        <label>
-          <span className="text-sm font-medium text-[#665a52]">Já presenteados</span>
-          <input
-            className={inputClassName}
-            name="giftedQuantity"
-            type="number"
-            min="0"
-            step="1"
-            required
-            defaultValue={gift?.giftedQuantity ?? 0}
-          />
+          <span>
+            <span className="block text-sm font-medium text-[#665a52]">Contribuição livre para a lua de mel</span>
+            <span className="mt-1 block text-xs leading-5 text-[#7e7868]">Permite que o convidado escolha quanto deseja contribuir.</span>
+          </span>
         </label>
         <label className="flex items-center gap-3 self-end rounded-2xl border border-[#d8cbc0] bg-white/55 px-4 py-3">
           <input

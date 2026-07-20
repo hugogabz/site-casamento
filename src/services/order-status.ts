@@ -13,13 +13,15 @@ export async function confirmPaidOrder(orderId: string, paymentReference: string
     if (order.status === ORDER_STATUS.PAID) return;
     if (order.status !== ORDER_STATUS.PENDING) throw new Error("Pedido não está pendente.");
 
-    const available = order.gift.quantity - order.gift.giftedQuantity;
-    if (order.quantity > available) throw new Error("Estoque insuficiente.");
+    if (!order.gift.allowsCustomAmount) {
+      const available = order.gift.quantity - order.gift.giftedQuantity;
+      if (order.quantity > available) throw new Error("Estoque insuficiente.");
 
-    await transaction.gift.update({
-      where: { id: order.giftId },
-      data: { giftedQuantity: { increment: order.quantity } },
-    });
+      await transaction.gift.update({
+        where: { id: order.giftId },
+        data: { giftedQuantity: { increment: order.quantity } },
+      });
+    }
     await transaction.giftOrder.update({
       where: { id: order.id },
       data: {

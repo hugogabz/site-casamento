@@ -11,10 +11,13 @@ function serializeGift(gift: {
   priceInCents: number;
   quantity: number;
   giftedQuantity: number;
+  allowsCustomAmount: boolean;
 }): Gift {
   return {
     ...gift,
-    status: getGiftStatus(gift.quantity, gift.giftedQuantity),
+    status: gift.allowsCustomAmount
+      ? "AVAILABLE"
+      : getGiftStatus(gift.quantity, gift.giftedQuantity),
   };
 }
 

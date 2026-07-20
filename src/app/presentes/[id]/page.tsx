@@ -17,7 +17,7 @@ export default async function GiftCheckoutPage({ params }: { params: Promise<{ i
   if (!gift || !gift.isActive) notFound();
 
   const available = Math.max(gift.quantity - gift.giftedQuantity, 0);
-  if (available === 0) notFound();
+  if (!gift.allowsCustomAmount && available === 0) notFound();
 
   return (
     <main className="min-h-screen bg-[#f8f2ea] px-5 py-8 text-[#44362f] sm:px-8 lg:px-12">
@@ -43,12 +43,23 @@ export default async function GiftCheckoutPage({ params }: { params: Promise<{ i
             <p className="mt-4 text-sm leading-6 text-[#665a52]">{gift.description}</p>
             <div className="my-6 flex items-end justify-between border-y border-[#ded2c8] py-5">
               <div>
-                <p className="text-xs uppercase tracking-[0.14em] text-[#7e7868]">Valor por unidade</p>
+                <p className="text-xs uppercase tracking-[0.14em] text-[#7e7868]">
+                  {gift.allowsCustomAmount ? "Contribuição mínima" : "Valor por unidade"}
+                </p>
                 <p className="mt-1 text-2xl font-semibold">{currencyFormatter.format(gift.priceInCents / 100)}</p>
               </div>
-              <p className="text-sm text-[#596653]">{available} disponível{available > 1 ? "is" : ""}</p>
+              <p className="text-sm text-[#596653]">
+                {gift.allowsCustomAmount
+                  ? "Você escolhe o valor"
+                  : `${available} disponível${available > 1 ? "is" : ""}`}
+              </p>
             </div>
-            <CheckoutForm giftId={gift.id} available={available} />
+            <CheckoutForm
+              giftId={gift.id}
+              available={available}
+              allowsCustomAmount={gift.allowsCustomAmount}
+              minimumAmountInCents={gift.priceInCents}
+            />
           </div>
         </section>
       </div>
