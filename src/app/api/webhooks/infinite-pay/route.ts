@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
@@ -31,6 +32,10 @@ export async function POST(request: Request) {
     }
 
     await confirmPaidOrder(order.id, payload.transaction_nsu);
+    revalidatePath("/");
+    revalidatePath("/presentes");
+    revalidatePath("/admin/presentes");
+    revalidatePath("/admin/pedidos");
     return NextResponse.json({ success: true, message: null });
   } catch (error) {
     return NextResponse.json(

@@ -68,6 +68,7 @@ export async function createGift(
   } catch (error) {
     return { error: error instanceof Error ? error.message : "Não foi possível criar o presente." };
   }
+  revalidatePath("/");
   revalidatePath("/presentes");
   revalidatePath("/admin/presentes");
   redirect("/admin/presentes");
@@ -84,6 +85,7 @@ export async function updateGift(
   } catch (error) {
     return { error: error instanceof Error ? error.message : "Não foi possível salvar o presente." };
   }
+  revalidatePath("/");
   revalidatePath("/presentes");
   revalidatePath("/admin/presentes");
   redirect("/admin/presentes");
@@ -94,6 +96,7 @@ export async function toggleGift(formData: FormData) {
   const id = getRequiredText(formData, "id");
   const gift = await prisma.gift.findUniqueOrThrow({ where: { id } });
   await prisma.gift.update({ where: { id }, data: { isActive: !gift.isActive } });
+  revalidatePath("/");
   revalidatePath("/presentes");
   revalidatePath("/admin/presentes");
 }
@@ -104,6 +107,7 @@ export async function deleteGift(formData: FormData) {
   const orders = await prisma.giftOrder.count({ where: { giftId: id } });
   if (orders > 0) throw new Error("Presentes com pedidos não podem ser excluídos; desative-os.");
   await prisma.gift.delete({ where: { id } });
+  revalidatePath("/");
   revalidatePath("/presentes");
   revalidatePath("/admin/presentes");
 }

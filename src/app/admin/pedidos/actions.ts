@@ -61,6 +61,7 @@ export async function updateOrderStatus(orderId: string, nextStatus: OrderStatus
 
   revalidatePath("/admin/pedidos");
   revalidatePath("/admin/presentes");
+  revalidatePath("/");
   revalidatePath("/presentes");
   return { success: true };
 }
