@@ -35,7 +35,7 @@ export default async function Home() {
           </div>
         </AnimatedSection>
 
-        <a href="#historia" aria-label="Ver mais" className="absolute bottom-9 left-1/2 -translate-x-1/2 animate-bounce text-[#7e7868]">
+        <a href="#historia" aria-label="Ver mais" className="absolute bottom-9 left-1/2 -translate-x-1/2 text-[#7e7868]">
           <ChevronDown className="size-5" />
         </a>
       </section>
@@ -75,14 +75,14 @@ export default async function Home() {
       </section>
 
       <section id="presentes" className="bg-[#fffaf4] px-5 py-24 sm:px-8 sm:py-32">
-        <AnimatedSection className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-7xl">
           <div className="mx-auto mb-12 max-w-3xl text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.34em] text-[#9f6d65]">Com carinho</p>
             <h2 className="mt-5 font-serif text-4xl sm:text-5xl">Lista de presentes</h2>
             <p className="mx-auto mt-5 max-w-2xl leading-7 text-[#665a52]">Se desejar tornar este novo capítulo ainda mais especial, escolha uma experiência preparada com carinho pelos noivos.</p>
           </div>
           <GiftGrid gifts={gifts} />
-        </AnimatedSection>
+        </div>
       </section>
 
       <footer className="border-t border-[#ded2c8] px-5 py-8 text-center text-sm text-[#7e7868]">Feito com carinho para {wedding.couple.first} & {wedding.couple.second}</footer>

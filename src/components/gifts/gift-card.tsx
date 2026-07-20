@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { Gift as GiftIcon, Sparkles } from "lucide-react";
 import Link from "next/link";
 
@@ -9,7 +6,6 @@ import { getAvailableQuantity, type Gift } from "@/types/gift";
 
 type GiftCardProps = {
   gift: Gift;
-  index: number;
 };
 
 const currencyFormatter = new Intl.NumberFormat("pt-BR", {
@@ -17,18 +13,14 @@ const currencyFormatter = new Intl.NumberFormat("pt-BR", {
   currency: "BRL",
 });
 
-export function GiftCard({ gift, index }: GiftCardProps) {
+export function GiftCard({ gift }: GiftCardProps) {
   const availableQuantity = getAvailableQuantity(gift);
   const isSoldOut = gift.status === "SOLD_OUT";
   const progress = Math.min((gift.giftedQuantity / gift.quantity) * 100, 100);
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.55, delay: index * 0.08 }}
-      className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-white/80 bg-white/75 shadow-lg shadow-[#6f5745]/10 backdrop-blur transition-shadow duration-300 hover:shadow-xl hover:shadow-[#6f5745]/15"
+    <article
+      className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-white/80 bg-white/90 shadow-lg shadow-[#6f5745]/10 transition-shadow duration-300 hover:shadow-xl hover:shadow-[#6f5745]/15"
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-[#efe3d7]">
         <GiftImage
@@ -98,6 +90,6 @@ export function GiftCard({ gift, index }: GiftCardProps) {
           )}
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 }

@@ -11,13 +11,15 @@ export function AnimatedSection({
   className?: string;
   hero?: boolean;
 }) {
+  if (!hero) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: hero ? 28 : 24 }}
-      {...(hero
-        ? { animate: { opacity: 1, y: 0 } }
-        : { whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.25 } })}
-      transition={{ duration: hero ? 0.9 : 0.7 }}
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
       className={className}
     >
       {children}

@@ -8,8 +8,8 @@ type GiftGridProps = {
 export function GiftGrid({ gifts }: GiftGridProps) {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {gifts.map((gift, index) => (
-        <GiftCard key={gift.id} gift={gift} index={index} />
+      {gifts.map((gift) => (
+        <GiftCard key={gift.id} gift={gift} />
       ))}
     </div>
   );
